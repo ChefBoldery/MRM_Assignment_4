@@ -1,0 +1,151 @@
+---
+title: "MRM Assignment 4"
+author: "Isaac Boldery"
+date: "10/1/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library('tidyverse')
+library('janitor')
+```
+
+## Exercise 1:
+
+# a) The question being asked is whether or not more "nameable" features make a certain category easier to construct and learn.
+
+# b,c)
+```{r}
+zl_data <- read.csv('https://osf.io/u7xmd/download')
+```
+
+# d)
+```{r}
+glimpse(zl_data)
+```
+
+Glimpse shows us that there are 77 variables in the dataframe.
+
+# e)
+```{r}
+zl_clean <- zl_data %>%
+  select('experiment', 'subject', 'Age', 'condition', 'blockNum', 'isRight') %>%
+  clean_names()
+
+zl_clean
+```
+This tibble presents the data in a snakecase and tidy format. 
+
+# f)
+```{r}
+zl_exp1a <- zl_clean %>%
+  filter(experiment == '1A')
+zl_exp1a
+```
+
+This tibble contains only the 1A experiment cases in a snakecase and tidy format.
+
+## Exercise 2:
+
+# a) 
+```{r}
+num_of_participants1A <- zl_exp1a %>%
+  distinct(subject) %>%
+  count()
+
+num_of_participants1A
+```
+
+There were 50 participants in the 1A experiment and this confirms what is reported in the paper. 
+
+# b)
+```{r}
+mean_age_of_participants1A <- zl_exp1a %>%
+  summarise(mean(age))
+
+mean_age_of_participants1A
+```
+
+The mean age of the participants in the 1A experiment was 32 years. This also matches with what was reported in the paper.
+
+# c)
+```{r}
+accuracy_across_condition <- zl_exp1a %>%
+  group_by(condition) %>%
+  summarise(accuracy = sum(is_right)/n())
+```
+
+# d)
+```{r}
+zl_exp1a_new <- zl_exp1a %>%
+  group_by(block_num, condition) %>%
+  summarise(accuracy = sum(is_right)/n()) %>%
+  ungroup()
+
+ggplot(zl_exp1a_new, aes(x=block_num, y=accuracy, color = condition)) +
+  geom_line() +
+  geom_point() +
+  xlab('Block') +
+  ylab('Training Accuracy') +
+  ylim(0.5,1) +
+  geom_hline(aes(yintercept = 0.5))
+```
+
+## Exercise 3:
+
+This exercise was completed on github.
+
+## Exercise 4:
+
+# a) 
+
+In the terminal, I used git clone on https://github.com/ChefBoldery/MRM_Assignment_4
+
+# b) I also changed the working directory in the terminal using cd MRM_Assignment_4
+
+## Exercise 5:
+
+# a,b)
+
+Ran both in terminal:
+
+/cloud/project/MRM_Assignment_4$ git config --global user.email "isaac.boldery@gmail.com"
+
+/cloud/project/MRM_Assignment_4$ git config --global user.name "Isaac Boldery"
+
+## Exercise 6:
+
+# a,b,c,d) 
+
+All the code was run in the terminal with no issues. 
+
+## Exercise 7: 
+
+# a) 
+
+readme.md committed with changes
+
+# b) 
+
+After the commit, git status shows that there is nothing ready to commit. The message "working tree clean" is also printed. 
+
+## Exercise 8: 
+
+# a)
+
+Added my favorite picture of a moose :)
+
+# b,c,d)
+
+git status now shows that my branch is ahead of origin by 1 commit which is the picture file. 
+
+## Exercise 9:
+
+# a)
+
+I used git commit and added a message saying "Added a picture of a moose :)."
+
+# b) 
+
+Git status shows that there is nothing to commit and that my working tree is clean. Also, that my branch is ahead of the origin/main by 2 commits which includes the change in the README.md file and the addition of the photo.
